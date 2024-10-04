@@ -3,14 +3,16 @@ from fastapi import APIRouter, HTTPException, Request
 from starlette.config import Config
 from starlette.responses import RedirectResponse
 
-from ...database.models import User
+import os
+
+# from ...database.models import User
 
 config = Config(".env")
 oauth = OAuth(config=config)
 oauth.register(
     name="google",
-    client_id="",
-    client_secret="",
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
     client_kwargs={
         "scope": "openid email profile",
@@ -26,7 +28,7 @@ async def login(request: Request) -> None:
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
-@router.get("login_callback")
+@router.get("/callback")
 async def auth_callback(request: Request) -> None:
     token = await oauth.google.authorize_access_token(request)
     user_info = token.get("userinfo")
@@ -36,7 +38,8 @@ async def auth_callback(request: Request) -> None:
             status_code=400, detail="Failed to fetch user information from Google"
         )
     
-    email = user_info.get("email")
+    print(user_info)
+    # email = user_info.get("email")
 
     return RedirectResponse(url="/main")
 
