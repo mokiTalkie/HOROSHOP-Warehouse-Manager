@@ -4,6 +4,7 @@ from authlib.integrations.starlette_client import OAuth, OAuthError
 from fastapi import APIRouter, Request
 from starlette.config import Config
 from starlette.responses import HTMLResponse, RedirectResponse
+from ...config import TEMPLATES
 
 from backend.utils.security import validate_user
 
@@ -33,9 +34,9 @@ oauth.register(
 router = APIRouter()
 
 
-@router.get("/")
-async def login_page():
-    return HTMLResponse("<a href=/auth/login>Login</a>")
+@router.get("/", response_class=HTMLResponse)
+async def login_page(request: Request):
+    return TEMPLATES.TemplateResponse(request=request, name="login.html")
 
 
 @router.get("/login")
