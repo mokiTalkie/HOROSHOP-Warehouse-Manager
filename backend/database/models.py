@@ -7,8 +7,13 @@ class Contacts(BaseModel):
 
 class User(BaseModel):
     id: int = Field(alias="_id")
-    email: EmailStr
-    name: str
+    email: str
+    name: str = None
+    photo: str = None
+
+    class Config:
+        populate_by_name=True
+        allow_population_by_field_name = True
 
 class Supplier(BaseModel):
     id: int = Field(alias="_id")
