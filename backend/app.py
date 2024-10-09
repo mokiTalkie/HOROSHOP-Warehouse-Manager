@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
+from backend.api.routes import router as general_router
 from backend.api.routes.auth import router as auth_router
 
 app = FastAPI()
@@ -21,6 +22,6 @@ app.add_middleware(CORSMiddleware,
 )
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 
+app.include_router(general_router, prefix='', tags=[""])
 app.include_router(auth_router, prefix="/auth", tags=["auth"])
 # app.mount('./frontend/static', StaticFiles(directory="./frontend/static"), name="static")
-
