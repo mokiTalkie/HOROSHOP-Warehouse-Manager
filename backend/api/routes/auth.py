@@ -51,12 +51,21 @@ async def auth(request: Request):
         access_token = await oauth.google.authorize_access_token(request)
     except OAuthError:
         return RedirectResponse(url="/auth")
-    
+
     user_info = access_token.get("userinfo")
-    if await validate_user(user_info=user_info):
-        print("User found!")
 
+    authorized_user = await validate_user(user_info=user_info)
 
+    if authorized_user:
+        request.session["access_token"] = access_token["id_token"]
+        request.session["token_expire_date"] = access_token["expires_at"] + 28800
 
-    request.session["user"] = 1
-    return RedirectResponse(url="/auth")
+        request.session["user_data"] = {
+            "user_id": authorized_user.id,
+            "user_email": authorized_user.email,
+            "user_name": authorized_user.name,
+            "user_photo": authorized_user.photo
+        }
+        return RedirectResponse(url='/')
+    else:
+        return RedirectResponse(url="/auth")
