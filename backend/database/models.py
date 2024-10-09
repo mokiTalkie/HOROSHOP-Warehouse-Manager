@@ -12,8 +12,7 @@ class User(BaseModel):
     photo: str = None
 
     class Config:
-        populate_by_name=True
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 class Supplier(BaseModel):
     id: int = Field(alias="_id")
@@ -23,6 +22,7 @@ class Category(BaseModel):
     id: int = Field(alias="_id")
     parent_id: int
     name: str
+    specs_range: str
 
 class Product(BaseModel):
     id: str

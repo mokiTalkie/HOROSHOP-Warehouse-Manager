@@ -59,4 +59,4 @@ async def auth(request: Request):
 
 
     request.session["user"] = 1
-    return RedirectResponse(url="/")
+    return RedirectResponse(url="/auth")

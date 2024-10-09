@@ -41,8 +41,7 @@ def delete_rack(rack_id: int) -> bool:
 
 
 async def get_user(email: str) -> User | None:
-    user = await DB_CLIENT["Users"].find_one({"email": email})
-
+    user = DB_CLIENT["Users"].find_one(filter={"email": email})
     if user:
         return User(**user)
     else:
@@ -50,12 +49,9 @@ async def get_user(email: str) -> User | None:
 
 
 def update_user(user: User) -> bool:
-    try:
-        DB_CLIENT["Users"].find_one_and_update(filter={"_id": user.id}, update={"$set": user.__dict__}, upsert=True)
+        DB_CLIENT["Users"].find_one_and_update(filter={"_id": user.id}, update={"$set": user.model_dump(by_alias=True)}, upsert=True)
         return True
-    except:
-        return False
 
-
+#TODO
 def delete_user(id: str) -> bool:
     pass
