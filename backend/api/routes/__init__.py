@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from starlette.responses import HTMLResponse
 from ...utils.security import auth_required
+from ...config import TEMPLATES
 
 
 router = APIRouter()
